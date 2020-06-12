@@ -1,0 +1,33 @@
+{
+  "name": "spruce-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -w",
+    "dev": "tsc-watch --onSuccess \"npm start\"",
+    "start": "node ./dist/testing/consumer.js",
+    "build-push": "rm -rf lib/ && tsc",
+    "prepare": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cors": "^2.8.6",
+    "@types/express": "^4.17.6",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.3.0",
+    "typeorm": "^0.2.25",
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "tsc-watch": "^4.2.8"
+  },
+  "files": [
+    "dist/**/*"
+  ]
+}
