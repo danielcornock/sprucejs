@@ -1,5 +1,5 @@
 {
-  "name": "spruce-js",
+  "name": "@danielc7150/sprucejs",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -9,7 +9,7 @@
     "dev": "tsc-watch --onSuccess \"npm start\"",
     "start": "node ./dist/testing/consumer.js",
     "build-push": "rm -rf lib/ && tsc",
-    "prepare": "npm run build"
+    "prepare": "npm run build-push"
   },
   "author": "",
   "license": "ISC",
