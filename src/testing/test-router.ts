@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { injectable } from 'tsyringe';
 
+import { IAuthMiddleware } from '../authentication/interfaces/auth-middleware.interface';
 import { AuthMiddleware } from '../authentication/services/auth.middleware';
 import { NotFoundException } from '../errors';
 import { INext, IReq, IRes } from '../http';
@@ -20,8 +21,8 @@ export class TestController {
 }
 
 @injectable()
-export class CustomAuth {
-  public async validate(req: IRes, res: IRes, next: INext): Promise<void> {
+export class CustomAuth implements IAuthMiddleware {
+  public async validate(req: IReq, res: IRes, next: INext): Promise<void> {
     next(new NotFoundException());
   }
 }

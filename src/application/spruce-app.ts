@@ -16,7 +16,6 @@ export class SpruceApp {
   public expressApp: express.Application;
   private _baseUrl: string | undefined;
   private readonly _appModule: IModule;
-  private _authMiddleware: InjectionToken<unknown> | undefined;
 
   constructor(expressApp: express.Application, appModule: IModule) {
     this.expressApp = expressApp;

@@ -4,6 +4,7 @@ import { autoInjectable } from 'tsyringe';
 import { INext, IReq, IRes } from '../../http/interfaces/middleware-params.interface';
 import { Logger } from '../../utilities/logger/logger';
 import { ExpressRouterFactory } from '../factories/express-router.factory';
+import { middlewareFn } from '../interfaces/middleware-function.interface';
 
 @autoInjectable()
 export class RouterService {
@@ -63,8 +64,6 @@ export class RouterService {
     return this.router;
   }
 }
-
-type middlewareFn = (req: IReq, res: IRes, next: INext) => Promise<any>;
 
 const enum Method {
   PUT = 'PUT',
