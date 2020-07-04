@@ -3,7 +3,9 @@ import 'reflect-metadata';
 import cors, { CorsOptions } from 'cors';
 import express from 'express';
 import { container, InjectionToken } from 'tsyringe';
+import { constructor } from 'tsyringe/dist/typings/types';
 
+import { AuthMiddleware } from '../authentication/services/auth.middleware';
 import { ErrorController } from '../errors/error.controller';
 import { AppRouter } from '../routing/router';
 import { Logger } from '../utilities/logger/logger';
@@ -14,6 +16,7 @@ export class SpruceApp {
   public expressApp: express.Application;
   private _baseUrl: string | undefined;
   private readonly _appModule: IModule;
+  private _authMiddleware: InjectionToken<unknown> | undefined;
 
   constructor(expressApp: express.Application, appModule: IModule) {
     this.expressApp = expressApp;
@@ -30,6 +33,10 @@ export class SpruceApp {
 
   public use(config: any): void {
     this.expressApp.use(config);
+  }
+
+  public setAuthenticator(authenticator: constructor<AuthMiddleware>): void {
+    container.register(AuthMiddleware, { useClass: authenticator });
   }
 
   private _defineRoutes(routers: Array<IRouterConfig>): void {
@@ -58,6 +65,8 @@ export class SpruceApp {
   }
 
   private _resolveDependencies(): void {
+    container.resolve(AuthMiddleware);
+
     this._appModule.providers.forEach((provider: InjectionToken<unknown>) => {
       container.resolve(provider);
     });

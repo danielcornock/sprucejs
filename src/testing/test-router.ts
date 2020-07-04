@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { injectable } from 'tsyringe';
 
+import { AuthMiddleware } from '../authentication/services/auth.middleware';
+import { NotFoundException } from '../errors';
+import { INext, IRes } from '../http';
 import { CoreRouter } from '../routing/classes/core-router.abstract';
+import { ProtectedRouter } from '../routing/classes/protected-router.abstract';
 import { ISpruceRouter } from '../routing/interfaces/spruce-router.interface';
 import { RouterService } from '../routing/service/router.service';
 
@@ -17,11 +21,22 @@ export class TestController {
 }
 
 @injectable()
-export class TestRouter extends CoreRouter implements ISpruceRouter {
+export class CustomAuth {
+  public async validate(req: IRes, res: IRes, next: INext): Promise<void> {
+    next(new NotFoundException());
+  }
+}
+
+@injectable()
+export class TestRouter extends ProtectedRouter implements ISpruceRouter {
   private readonly _testController: TestController;
 
-  constructor(router: RouterService, testController: TestController) {
-    super(router);
+  constructor(
+    router: RouterService,
+    authMiddleware: AuthMiddleware,
+    testController: TestController
+  ) {
+    super(router, authMiddleware);
     this._testController = testController;
   }
 
