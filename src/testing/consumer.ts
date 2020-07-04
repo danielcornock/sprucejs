@@ -2,14 +2,11 @@ import 'reflect-metadata';
 
 import { SpruceFactory } from '../application/factories/spruce.factory';
 import { SpruceApp } from '../application/spruce-app';
-import { PoopRouter, TestRouter } from './test-router';
+import { AppModule } from './app.module';
 
-const app: SpruceApp = SpruceFactory.create();
+const app: SpruceApp = SpruceFactory.create(AppModule);
 app.setBaseUrl('/api/v1');
 
-app.defineRoutes([
-  { url: '/test', router: TestRouter },
-  { url: '/poop', router: PoopRouter }
-]);
+app.init();
 
 app.listen(3000);

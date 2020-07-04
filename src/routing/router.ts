@@ -16,7 +16,7 @@ export class AppRouter extends CoreRouter {
     config.forEach((route: IRouterConfig) => {
       this.routerService.use(
         route.url,
-        container.resolve(route.router).nativeRoutes
+        container.resolve(route.router).generateRoutes()
       );
 
       Logger.info(`Configuring routes for ${route.url}`);

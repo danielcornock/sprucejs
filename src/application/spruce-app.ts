@@ -2,20 +2,22 @@ import 'reflect-metadata';
 
 import cors, { CorsOptions } from 'cors';
 import express from 'express';
-import { container } from 'tsyringe';
+import { container, InjectionToken } from 'tsyringe';
 
 import { ErrorController } from '../errors/error.controller';
 import { AppRouter } from '../routing/router';
 import { Logger } from '../utilities/logger/logger';
+import { IModule } from './interfaces/module.interface';
 import { IRouterConfig } from './interfaces/router-config.interface';
 
 export class SpruceApp {
   public expressApp: express.Application;
   private _baseUrl: string | undefined;
+  private readonly _appModule: IModule;
 
-  constructor(expressApp: express.Application) {
+  constructor(expressApp: express.Application, appModule: IModule) {
     this.expressApp = expressApp;
-    this._init();
+    this._appModule = appModule;
   }
 
   public setBaseUrl(url: string): void {
@@ -30,7 +32,7 @@ export class SpruceApp {
     this.expressApp.use(config);
   }
 
-  public defineRoutes(routers: Array<IRouterConfig>): void {
+  private _defineRoutes(routers: Array<IRouterConfig>): void {
     Logger.success('Building routes...');
     Logger.info(`Setting base URL to ${this._baseUrl}`);
     this.expressApp.use(
@@ -49,7 +51,15 @@ export class SpruceApp {
     ErrorController.create(this.expressApp);
   }
 
-  private _init() {
+  public init() {
+    this._resolveDependencies();
+    this._defineRoutes(this._appModule.routes);
     this.expressApp.use(express.json());
+  }
+
+  private _resolveDependencies(): void {
+    this._appModule.providers.forEach((provider: InjectionToken<unknown>) => {
+      container.resolve(provider);
+    });
   }
 }

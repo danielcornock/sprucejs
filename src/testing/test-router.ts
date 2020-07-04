@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { autoInjectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
 
 import { CoreRouter } from '../routing/classes/core-router.abstract';
 import { ISpruceRouter } from '../routing/interfaces/spruce-router.interface';
 import { RouterService } from '../routing/service/router.service';
 
-@autoInjectable()
+@injectable()
 export class TestController {
   constructor() {}
 
@@ -16,7 +16,7 @@ export class TestController {
   }
 }
 
-@autoInjectable()
+@injectable()
 export class TestRouter extends CoreRouter implements ISpruceRouter {
   private readonly _testController: TestController;
 
@@ -32,7 +32,7 @@ export class TestRouter extends CoreRouter implements ISpruceRouter {
   }
 }
 
-@autoInjectable()
+@injectable()
 export class PoopController {
   constructor() {}
 
@@ -41,7 +41,7 @@ export class PoopController {
   }
 }
 
-@autoInjectable()
+@injectable()
 export class PoopRouter extends CoreRouter implements ISpruceRouter {
   private readonly _poopController: PoopController;
 
