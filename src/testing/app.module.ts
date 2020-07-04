@@ -7,7 +7,16 @@ import { PoopController, PoopRouter, TestController, TestRouter } from './test-r
 export class AppModule implements IModule {
   public providers = [PoopController, TestController];
   public routes = [
-    { url: '/test', router: TestRouter },
+    {
+      url: '/test',
+      router: TestRouter,
+      children: [
+        {
+          url: '/:id/poop',
+          router: PoopRouter
+        }
+      ]
+    },
     { url: '/poop', router: PoopRouter }
   ];
 }

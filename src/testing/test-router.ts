@@ -3,9 +3,8 @@ import { injectable } from 'tsyringe';
 
 import { AuthMiddleware } from '../authentication/services/auth.middleware';
 import { NotFoundException } from '../errors';
-import { INext, IRes } from '../http';
+import { INext, IReq, IRes } from '../http';
 import { CoreRouter } from '../routing/classes/core-router.abstract';
-import { ProtectedRouter } from '../routing/classes/protected-router.abstract';
 import { ISpruceRouter } from '../routing/interfaces/spruce-router.interface';
 import { RouterService } from '../routing/service/router.service';
 
@@ -28,7 +27,7 @@ export class CustomAuth {
 }
 
 @injectable()
-export class TestRouter extends ProtectedRouter implements ISpruceRouter {
+export class TestRouter extends CoreRouter implements ISpruceRouter {
   private readonly _testController: TestController;
 
   constructor(
@@ -36,7 +35,7 @@ export class TestRouter extends ProtectedRouter implements ISpruceRouter {
     authMiddleware: AuthMiddleware,
     testController: TestController
   ) {
-    super(router, authMiddleware);
+    super(router);
     this._testController = testController;
   }
 
@@ -51,8 +50,8 @@ export class TestRouter extends ProtectedRouter implements ISpruceRouter {
 export class PoopController {
   constructor() {}
 
-  public get(...args: any) {
-    args[1].send('hey poop!');
+  public async get(req: IReq, res: IRes, next: INext) {
+    res.send('hey poop!');
   }
 }
 
@@ -66,7 +65,7 @@ export class PoopRouter extends CoreRouter implements ISpruceRouter {
   }
 
   public generateRoutes(): Router {
-    this.routerService.router.get('/poop', this._poopController.get.bind(this));
+    this.routerService.get('/poop', this._poopController.get.bind(this));
 
     return this.nativeRoutes;
   }

@@ -14,14 +14,30 @@ export class AppRouter extends CoreRouter {
 
   public setRoutes(config: Array<IRouterConfig>): Router {
     config.forEach((route: IRouterConfig) => {
+      Logger.info(`\nConfiguring routes for ${route.url}:`);
       this.routerService.use(
         route.url,
         container.resolve(route.router).generateRoutes()
       );
 
-      Logger.info(`Configuring routes for ${route.url}`);
+      this._handleChildren(route);
     });
 
     return this.nativeRoutes;
+  }
+
+  private _handleChildren(route: IRouterConfig): void {
+    if (!route.children) {
+      return;
+    } else {
+      route.children.forEach((child: IRouterConfig) => {
+        const concatenatedUrl: string = route.url + child.url;
+        Logger.info(`\nConfiguring routes for ${concatenatedUrl}`);
+        this.routerService.use(
+          concatenatedUrl,
+          container.resolve(child.router).generateRoutes()
+        );
+      });
+    }
   }
 }
