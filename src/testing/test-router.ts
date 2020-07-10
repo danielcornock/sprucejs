@@ -42,7 +42,9 @@ export class TestRouter extends CoreRouter implements ISpruceRouter {
 
   public generateRoutes(): Router {
     this.routerService.get('/test', this._testController.get.bind(this));
-
+    this.routerService.post('/test', async (req, res, next) => ({
+      hey: 'hey'
+    }));
     return this.nativeRoutes;
   }
 }

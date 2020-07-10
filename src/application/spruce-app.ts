@@ -39,8 +39,6 @@ export class SpruceApp {
   }
 
   private _defineRoutes(routers: Array<IRouterConfig>): void {
-    Logger.success('Building routes...');
-    Logger.info(`Setting base URL to ${this._baseUrl}`);
     this.expressApp.use(
       this._baseUrl || '',
       container.resolve(AppRouter).setRoutes(routers)
@@ -58,16 +56,22 @@ export class SpruceApp {
   }
 
   public init() {
-    this._resolveDependencies();
+    container.resolve(AuthMiddleware);
+    Logger.success('Building routes...');
+    Logger.info(`Setting base URL to ${this._baseUrl}`);
+    this._resolveDependencies(this._appModule);
     this._defineRoutes(this._appModule.routes);
     this.expressApp.use(express.json());
   }
 
-  private _resolveDependencies(): void {
-    container.resolve(AuthMiddleware);
-
-    this._appModule.providers.forEach((provider: InjectionToken<unknown>) => {
+  private _resolveDependencies(module: IModule): void {
+    module.providers.forEach((provider: InjectionToken<unknown>) => {
       container.resolve(provider);
+    });
+
+    module.imports.forEach((child: IModule) => {
+      this._resolveDependencies(child);
+      this._defineRoutes(child.routes);
     });
   }
 }

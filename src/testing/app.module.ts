@@ -1,12 +1,15 @@
-import { injectable } from 'tsyringe';
-
 import { IModule } from '../application/interfaces/module.interface';
 import { PoopController, PoopRouter, TestController, TestRouter } from './test-router';
 
-@injectable()
-export class AppModule implements IModule {
-  public providers = [PoopController, TestController];
-  public routes = [
+export const PoopModule: IModule = {
+  imports: [],
+  providers: [PoopController],
+  routes: [{ url: '/poop', router: PoopRouter }]
+};
+export const AppModule: IModule = {
+  imports: [PoopModule],
+  providers: [TestController],
+  routes: [
     {
       url: '/test',
       router: TestRouter,
@@ -16,7 +19,6 @@ export class AppModule implements IModule {
           router: PoopRouter
         }
       ]
-    },
-    { url: '/poop', router: PoopRouter }
-  ];
-}
+    }
+  ]
+};
