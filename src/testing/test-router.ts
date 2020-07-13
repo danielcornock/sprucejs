@@ -1,4 +1,3 @@
-import { Router } from 'express';
 import { injectable } from 'tsyringe';
 
 import { IAuthMiddleware } from '../authentication/interfaces/auth-middleware.interface';
@@ -40,12 +39,11 @@ export class TestRouter extends CoreRouter implements ISpruceRouter {
     this._testController = testController;
   }
 
-  public generateRoutes(): Router {
+  protected _generateRoutes(): void {
     this.routerService.get('/test', this._testController.get.bind(this));
     this.routerService.post('/test', async (req, res, next) => ({
       hey: 'hey'
     }));
-    return this.nativeRoutes;
   }
 }
 
@@ -67,9 +65,7 @@ export class PoopRouter extends CoreRouter implements ISpruceRouter {
     this._poopController = poopController;
   }
 
-  public generateRoutes(): Router {
+  protected _generateRoutes(): void {
     this.routerService.get('/poop', this._poopController.get.bind(this));
-
-    return this.nativeRoutes;
   }
 }

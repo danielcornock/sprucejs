@@ -26,17 +26,38 @@ export class AppRouter extends CoreRouter {
     return this.nativeRoutes;
   }
 
-  private _handleChildren(route: IRouterConfig): void {
+  protected _generateRoutes(): void {
+    return;
+  }
+
+  private _handleChildren(route: IRouterConfig, previousUrl?: string): void {
     if (!route.children) {
       return;
     } else {
       route.children.forEach((child: IRouterConfig) => {
-        const concatenatedUrl: string = route.url + child.url;
+        const concatenatedUrl: string = `${previousUrl || route.url}${
+          child.url
+        }`;
+
         Logger.info(`\nConfiguring routes for ${concatenatedUrl}`);
         this.routerService.use(
           concatenatedUrl,
           container.resolve(child.router).generateRoutes()
         );
+
+        this._handleChildren(child, concatenatedUrl);
+
+        // child.children?.forEach((secondChild: IRouterConfig) => {
+        //   const fullRoute = route.url + child.url + secondChild.url;
+        //   Logger.info(`\nConfiguring routes for ${fullRoute}`);
+
+        //   this.routerService.use(
+        //     fullRoute,
+        //     container.resolve(secondChild.router).generateRoutes()
+        //   );
+
+        // this._handleChildren(secondChild);
+        // });
       });
     }
   }

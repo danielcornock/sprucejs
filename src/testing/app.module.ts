@@ -15,10 +15,27 @@ export const AppModule: IModule = {
       router: TestRouter,
       children: [
         {
-          url: '/:id/poop',
-          router: PoopRouter
+          url: '/:testId/poop',
+          router: PoopRouter,
+          children: [
+            {
+              url: '/:poopId/test',
+              router: TestRouter,
+              children: [
+                {
+                  url: '/:anotherId/yolo',
+                  router: PoopRouter
+                }
+              ]
+            }
+          ]
         }
       ]
+    },
+    {
+      url: '/poop',
+      router: PoopRouter,
+      children: []
     }
   ]
 };

@@ -47,7 +47,7 @@ export class RouterService {
   }
 
   private _log(method: Method, params: string): void {
-    Logger.info(`\t${method}\t${params}`);
+    Logger.success(`\t${method}\t${params}`);
   }
 
   private _tryCatch(fn: middlewareFn, statusCode: number | null) {
